@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+		<div class="row px-5 pl-5 pt-1 pb-3" style="margin-top: 20px; width: 80%; margin-left: 170px">			
+			<div class="row mx-auto py-2 ">
+							
+				<!--individual posts-->
+				<div class="card py-3 " style="margin-bottom: 7px">
+					<form method="POST" enctype="multipart/form-data">
+						{% csrf_token %}
+						<!--category dropdown-->
+						<div class="mb-3">
+							<label for="postCategorySelection" class="col-form-label req">Category</label>
+							<select class="form-select" id="postCategorySelection" required>
+								<option selected disabled value="">--</option>
+								<option value="sell">Sell</option>
+								<option value="services">Services</option>
+								<option value="swap">Swap</option>
+								<option value="find">Find</option>
+							</select>
+						</div>
+						<!--post description text box-->
+						<div class="mb-3">
+							<label for="postDescription" class="col-form-label req">Description</label>
+							<textarea class="form-control" id="postDescription" placeholder="Enter listing's description here..."required></textarea>
+						</div>
+						<!--post tags text-->
+						<div class="mb-3">
+							<label for="postTags" class="col-form-label">Tags</label>
+							<input type="text" class="form-control" id="postTags" placeholder="Enter post tags separated by commas...">
+						</div>
+						<!--post tags text-->
+						<div class="mb-3">
+							<label for="postImages" class="col-form-label">Images</label>
+							<input type="file" class="form-control" id="postImages" multiple>
+						</div>
+						<!--required note-->
+						<div class="mb-3">
+							<p style="color:red">* Required</p>
+						</div>
+						<!--post submit button-->
+						<div class="mb-3">
+							<button class="btn bgyellow" type="submit" id="postSubmit">Post</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+			
+
+{% endblock content %}

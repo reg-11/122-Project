@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+		<!-- <div class="container-fluid " style="background-color:#ECEEEE;"> -->
+			<div class="row px-5 pl-5 pt-1 pb-3" style="margin-top: 20px; width: 80%; margin-left: 170px">
+							
+				<div class="row mx-auto py-2 ">
+										
+				<!--individual posts-->
+				<div class="card py-3 " style="margin-bottom: 7px">
+				<!--profile picture, username, category-->
+					<div class="row px-3 py-1">
+						<div class="col-auto px-0">
+							<img src="{{ object.author.profile.profile_pic.url }}" class="rounded-circle" style="width:40px">
+						</div>
+						<div class="col-auto me-auto">
+							<h5 class="card-title">{{ object.author }}</h5>
+							<small class="text-muted">{{ object.date|date:"F d, Y" }}</small>
+						</div>
+						<div class="col-auto">
+							<button type="button" class="btn btn-sm btn-secondary">{{ object.category }}</button>
+							<button type="button" class="btn btn-sm btn-light ms-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots"></i></button>
+							<ul class="dropdown-menu" aria-labelledby="filterdropdownmenu">
+							<li><button class="dropdown-item" type="button">
+							<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="#"><i class="bi bi-flag-fill">Report</i></a></button></li>
+														
+							<!-- if own post -->
+							{% if post.author == user %}
+
+							<li><button class="dropdown-item" type="button" >
+							<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/delete/">
+							<i class="bi bi-trash-fill">Delete</i></a>
+							</button></li>
+
+							<li><button class="dropdown-item" type="button"><a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/update/"><i class="bi bi-pen-fill">Edit</i></a></button></li>
+							{% endif %}
+
+						</ul>
+						</div>
+					</div>
+					<!--content-->
+					<div class="row px-4 py-1">
+						<p class="card-text" style="margin-left: 30px">{{object.description}}</p>
+						<!-- <img  src= "{{ post.image.url }}" style="width: 100%; margin-top: 60px"> -->
+						<p class="text-muted" style="margin-left: 30px">{{object.tags}}</p>
+					</div>
+					<div class="col-auto " style="margin-left: 850px">
+							<button type="button" class="btn" style="background:white; font-size:1.1rem; color:#909911;"><i class="bi bi-heart-fill"></i></button>
+					</div>
+					<hr style="width: 100%">
+
+					<!--replies, likes-->
+					<div class="row px-3 py-1">
+						<div class="col-auto me-auto">
+							<!-- <button type="button" class="btn" style="background:white; font-size:1.1rem; color:#909911"><i class="bi bi-reply-fill"></i>Replies</button> -->
+
+							<h3>Comments...</h3>
+							<br/>
+							{% if not post.comments.all %}
+								No comments Yet...
+								<br/><br/>
+								<a href="{% url 'esko_app:add_comment' post.pk %}">Add Comment</a>
+								
+								
+							{% else %}
+							<a href="{% url 'esko_app:add_comment' post.pk %}">Add Comment</a>
+							<br/><br/>
+								{% for comment in post.comments.all %}
+								    <!-- profile pic of commenter -->
+									<div class="col-auto px-0">
+										<img src="{{ Comment.commenter.profile.profile_pic.url }}" class="rounded-circle" style="width:40px">
+									</div>
+
+									<strong>
+										{{ comment.commenter }} | {{ comment.date_added }}
+									</strong>
+									<br/>
+									{{ comment.body }}
+									<br/><br/>
+								{% endfor %}
+							{% endif %}
+						</div>
+						
+					</div>
+				</div>
+
+			</div>
+		</div>
+								
+								
+	<!-- </div> -->
+
+{% endblock%}

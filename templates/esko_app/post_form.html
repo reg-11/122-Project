@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+		<div class="row px-5 pl-5 pt-1 pb-3" style="margin-top: 20px; width: 80%; margin-left: 170px">			
+			<div class="row mx-auto py-2 ">
+							
+				<!--individual posts-->
+				<div class="card py-3 " style="margin-bottom: 7px">
+					<form method="POST" enctype="multipart/form-data">
+						{% csrf_token %}
+						{{ form.as_p }}
+				
+						<!--required note-->
+						<!-- <div class="mb-3">
+							<p style="color:red">* Required</p>
+						</div> -->
+						<!--post submit button-->
+						<div class="mb-3">
+							<button class="btn bgyellow" type="submit" id="postSubmit">Post</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+			
+
+{% endblock content %}

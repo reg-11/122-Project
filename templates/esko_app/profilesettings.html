@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="row g-0 ">
+
+		<div class="col-md-5 g-0 justify-content-center" >
+			<div class="leftside flex justify-content-center align-items-center padding-top-10" style="height: 165vh; width: 100%;background:#F5F5F5 ; margin-top: 10; ">				
+			
+				<div class="col center text-center " >
+	
+					<img class="rounded-circle account-img" src="{{ user.profile.profile_pic.url }}" style="width: 40%; margin-top: 60px">
+					<h2 class="font-weight-bold" style="align-content: center;font-size: 40px; color:#515A5A; font-weight: bold;">{{ user.username }}</h2>
+				</div>
+
+			</div>
+					
+		</div>
+
+		<div class="col-md-6 ">
+			<div class=" rightside justify-content-center align-items-center"  style="height: 100vh; width: 100%;" >
+
+				<ul class="nav nav-tabs">
+				  <li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="#" style="align-content: right;font-size: 20px; color:#DBCA46; font-weight: bold; margin-left: 20px; margin-top: 30px;font-family: sans-serif;">Profile </a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link" href="{% url 'esko_app:password_reset' %}" style="align-content: right;font-size: 20px; color:#DBCA46; font-weight: bold; margin-left: 5px; margin-top: 30px;font-family: sans-serif;">Change Password </a>
+				  </li>
+				</ul>
+
+				<!-- <h2 class="font-weight-bold" style="align-content: right;font-size: 20px; color:#DBCA46; font-weight: bold; margin-left: 20px; margin-top: 30px;font-family: sans-serif;">Profile Information <a href="" style="color:#DBCA46;margin-left: 5px;">Account Settings</a></h2> -->
+
+
+				
+
+					<div class="container-sm p-3 my-3" style="margin-left: 40px;margin-top: 2px;">
+								{% if messages %}
+									{% for message in messages %}
+										<div class="alert alert-success">
+											{{ message }}
+										</div>
+
+									{% endfor %}
+
+								{% endif %}
+
+
+						{% if u_form.errors %}
+							{% for field in u_form %}
+								{% for error in field.errors %}
+									<p> {{ error }} </p>
+								{% endfor %}
+							{% endfor %}
+						{% endif %}
+						
+						<form method="POST" enctype="multipart/form-data" >
+						{% csrf_token %}
+
+						<div class="form-group row" >
+							<label for="username" class="col-sm-2 col-form-label" style="font-weight: bold">Username</label>
+							<div class="col-sm-11" >
+							  <!-- <input type="text" class="form-control" id="username" > -->
+							  {{ u_form.username }}
+							</div>
+						</div>
+
+						<!-- <div class="form-group row" >
+							<label for="email" class="col-sm-2 col-form-label" style="font-weight: bold">Email</label>
+							<div class="col-sm-11">
+							  <input type="email" class="form-control" id="email" >
+							  {{ u_form.email }}
+							</div>
+						</div> -->
+
+						<div class="form-group row" >
+							<label for="year_level" class="col-sm-2 col-form-label" style="font-weight: bold">Year_Level</label>
+							<div class="col-sm-11">
+							  <!-- <input type="text" class="form-control" id="year_level" > -->
+							  {{ p_form.year_level }}
+							</div>
+						</div>
+
+						<div class="form-group row" >
+							<label for="phone_number" class="col-sm-2 col-form-label" style="font-weight: bold">Phone_Number</label>
+							<div class="col-sm-11">
+							  <!-- <input type="text" class="form-control" id="phone_number" > -->
+							  {{ p_form.phone_number }}
+							</div>
+						</div>
+
+						<div class="form-group row" >
+							<label for="sns_account" class="col-sm-2 col-form-label" style="font-weight: bold">SNS_Account</label>
+							<div class="col-sm-11">
+							  <!-- <input type="text" class="form-control" id="sns_account" > -->
+							  {{ p_form.sns_account }}
+							</div>
+						</div>
+
+						<div class="form-group row" >
+							<label for="bio" class="col-sm-2 col-form-label" style="font-weight: bold">Bio</label>
+							<div class="col-sm-11">
+							  <!-- <input type="text" class="form-control" id="bio" > -->
+							  {{ p_form.bio }}
+							</div>
+						</div>
+
+						  <div class="form-group row" style="margin-top: 10px">
+							<label for="profile_picture" style="font-weight: bold">Profile picture</label>
+							<!-- <input type="file" class="form-control-file" id="profile_picture"> -->
+							{{ p_form.profile_pic }}
+						  </div>
+						
+						  
+						  <button type="button" class="btn btn-warning btn-lg" style="font-size: 15px; color: white ;  width:100%; margin-top: 30px; margin-left: 5px" data-bs-toggle="modal" data-bs-target="#editProfileModal">Update Profile</button>
+
+						  <!-- Edit Profile Modal-->
+							<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+							  <div class="modal-dialog" role="document">
+								<div class="modal-content">
+								  <div class="modal-header">
+									<h5 class="modal-title" id="editProfileModal">Edit Profile</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								  </div>
+								  <div class="modal-body">
+									Are you sure you want to save your changes?
+								  </div>
+								  <div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-warning">Update</button>
+								  </div>
+								</div>
+							  </div>
+							</div>
+						  
+						</form>		
+
+
+					</div>
+			</div>
+		</div>		
+	</div>
+
+
+
+
+
+
+{% endblock %}

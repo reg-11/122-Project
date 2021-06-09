@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!--welcome container-->
+	<div class="container-fluid text-center mb-2 px-2 py-5" style="background-color:#ECEEEE;">
+		<h1 class="display-3">
+			Welcome to eSKO!
+		</h1>
+		<hr class="my-3 mx-5">
+		{% if request.user.username != 'admin' %}
+		<a class="btn btn-lg bgyellow text-nowrap" href="{% url 'esko_app:post-create' %}">Create Post</a>
+		{% endif %}
+	</div>
+
+	<!--categories container-->
+	<div class="container-fluid px-3 py-5">
+		<h1 class="display-6 text-center">Categories</h1>
+		<p class="text-center pb-3">What kind of posts can I find in eSKO?</p>
+		<div class="row">
+			<div class="col rounded-3 mx-2 px-3 py-3" style="color:white; background-color:#A10618;">
+				<h1 class="display-5">
+					Sell
+				</h1>
+				<p>Want to sell, looking for buyer;  want to buy, looking for seller</p>
+			</div>
+			<div class="col rounded-3 mx-2 px-3 py-3" style="color:white; background-color:#389DA1;">
+				<h1 class="display-5">
+					Services
+				</h1>
+				<p>Services offered like renting a camera and more</p>
+			</div>
+			<div class="col rounded-3 mx-2 px-3 py-3" style="color:white; background-color:#435570;">
+				<h1 class="display-5">
+					Swap
+				</h1>
+				<p>Want to trade? Just like the barter system in the old days!</p>
+			</div>
+			<div class="col rounded-3 mx-2 px-3 py-3" style="color:white; background-color:#EFBA34;">
+				<h1 class="display-5">
+					Find
+				</h1>
+				<p>Whatever you are looking for, you might find it here.</p>
+			</div>
+		</div>
+	</div>
+
+	<!--timeline container-->
+	<div class="container-fluid px-5 py-5" style="background-color:#ECEEEE;">
+		<div class="row px-4">
+			<h1 class="display-6">Posts</h1>
+		</div>
+		<div class="row px-4"><hr class="mx-auto"></div>
+
+		<!--timeline posts-->
+		<div class="row px-5 pl-5 pt-1 pb-3">
+			<div class="row pb-2">
+				<div class="col-auto ms-auto">
+
+					<form method="get">
+						<div class="btn-group">
+							<button class="btn btn-light dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="bi bi-funnel-fill" style="color:#909911;"></i>
+								Filter
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="filterdropdownmenu" name="category">
+								<li><button class="dropdown-item" type="submit" name="category" value="">All Posts</button></li>
+								<li><button class="dropdown-item" type="submit" name="category" value="sell">Sell</button></li>
+								<li><button class="dropdown-item" type="submit" name="category" value="services/rent">Services/Rent</button></li>
+								<li><button class="dropdown-item" type="submit" name="category" value="swap">Swap</button></li>
+								<li><button class="dropdown-item" type="submit" name="category" value="find">Find</button></li>
+							</ul>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row mx-auto py-2">
+
+				<!--individual posts-->
+				{% for post in page %}
+						<!--individual posts-->
+						<div class="card py-3 " style="margin-bottom: 7px" >
+							<!--profile picture, username, category-->
+								<div class="row px-3 py-1">
+									<div class="col-auto px-0">
+										<img src="{{ post.author.profile.profile_pic.url }}" class="rounded-circle" style="width:40px">
+									</div>
+									<div class="col-auto me-auto">
+										<form action="{% url 'esko_app:profile-other' post.author %}" method="POST">
+											{% csrf_token %}
+											<button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-link" style="color:#515A5A;font-weight: bold;font-size: 20px; text-decoration: none">{{ post.author }}</button> 
+										</form>
+										<small class="text-muted" style="margin-left: 15px">{{ post.date|date:"F d, Y" }}</small>
+									</div>
+									<div class="col-auto">
+										<form method="get" >
+											<button type="submit" name="category" value="{{ post.category }}" class="btn btn-sm btn-secondary">{{ post.category }}</button>
+
+											<button type="button" class="btn btn-sm btn-light ms-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots"></i></button>
+
+											<ul class="dropdown-menu" aria-labelledby="filterdropdownmenu">
+											<li><button class="dropdown-item" type="button">
+												
+												<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="{% url 'esko_app:report-post' post.pk %}"><i class="bi bi-flag-fill">Report</i></a></button></li>
+														
+											<!-- if own post -->
+											{% if post.author == user %}
+
+											<li><button class="dropdown-item" type="button" >
+												<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/delete/">
+													<i class="bi bi-trash-fill">Delete</i></a>
+											</button></li>
+
+											<li><button class="dropdown-item" type="button"><a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/update/"><i class="bi bi-pen-fill">Edit</i></a></button></li>
+											{% endif %}
+
+										</ul>
+										</form>
+										
+										
+									</div>
+								</div>
+							<!--content-->
+							<div class="row px-4 py-1">
+								<p class="card-text" style="margin-left: 47px">
+								<a class="card-text" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}">{{post.description}} </a></p>
+
+								{% if  post.post_image   %}
+								
+								
+								<a href="{{ post.post_image.url }}">
+								<img  src= "{{ post.post_image.url }}" style="width: 20%; height: 75%;margin-top: 12px; margin-left: 25px;margin-bottom: 10px">
+								</a>
+								{% endif %}
+
+								<div class="btn-group" role="group">
+									{% for tag in tag_list   %}
+										<form class="d-flex" method=GET action="{% url 'esko_app:search_by_tags' %}">
+
+											<button class="btn btn-link btn-sm" type="submit" name="search_box" value="{{tag}}" style="color: gray;font-size: 15px;margin-left: 35px">#{{tag}}</button>
+													
+										</form>
+									{% endfor   %}
+								</div>
+
+								<!-- <div class="container">
+									<div class="col-md-7 mt-1 mb-1"> -->
+										<!-- {% for tag in post.tags_list   %} -->
+										<!-- <a href="{% url 'esko_app:posts_by_tags' tag.slug %}" style="margin-left: 48px; margin-top: 10px; color:#ACB274; text-decoration: none "> --><!-- #{{tag.name}}</a> -->
+									<!-- #{{post.tags}}</a> -->
+										<!-- {% endfor   %} -->
+									<!-- </div>
+								</div> -->
+
+							</div>
+							
+						
+							<!--replies, likes-->
+							<div class="row px-3 py-1">
+								<div class="col-auto me-auto">
+									<a class="btn" style="background:white; font-size:1.1rem; color:#909911" href="{% url 'esko_app:post-detail' post.pk %}"><i class="bi bi-reply-fill"></i>Replies</a>
+								</div>
+								<div class="col-auto">
+								<form action="{% url 'esko_app:like_post' post.pk %}" method="POST">
+								{% csrf_token %}	
+
+								{% if liked %}
+									<button type="submit" name="post_id" value="{{ post.id }}" class="btn" style="background:white; font-size:1.1rem; color:#909911;"><i class="bi bi-heart-fill"></i></button>  
+								{% else %}		
+									<button type="submit" name="post_id" value="{{ post.id }}" class="btn" style="background:white; font-size:1.1rem; color:#909911;"><i class="bi bi-heart"></i></button> 
+								{% endif %}	
+
+								{% if post.total_likes == 1 %}
+										{{ post.total_likes }} Like
+								{% else %}
+									{{ post.total_likes }} Likes
+								{% endif %}
+							</form>
+								</form>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+			</div>
+
+			{% load extras %}
+			<div class="page-links " style="font-size: 30px">
+				<div class="container">
+					<div class="row ">
+						<div class="col-auto me-auto">
+							{% if page.has_previous %}
+								<div style="text-align: left;">
+									<a href="{% my_url page.previous_page_number 'page' request.GET.urlencode %}" style="color:#909911;"><i class="bi bi-arrow-left-circle-fill"></i></a>
+								</div>
+							{% endif %}
+						</div>
+						<div class="col-auto">
+							{% if page.has_next %}
+								<div style="text-align: right;">
+									<a href="{% my_url page.next_page_number 'page' request.GET.urlencode %}" style="color:#909911;"><i class="bi bi-arrow-right-circle-fill"></i></a>
+								</div>
+							{% endif %}
+						</div>
+						<!-- <div class="col">
+							{% if page.has_previous %}
+								<div style="text-align: left;">
+								<a href="{% my_url page.previous_page_number 'page' request.GET.urlencode %}" style="color:#909911;"><span class="bi bi-arrow-left-circle-fill"></i></span>
+								</div>
+							{% endif %}
+						</div>
+
+						<div class="col">
+							{% if page.has_next %}
+								<div style="text-align: right;">
+								<a href="{% my_url page.next_page_number 'page' request.GET.urlencode %}" style="color:#909911;"><span class="bi bi-arrow-right-circle-fill"></i></span>
+								</div>
+							{% endif %}
+						</div> -->
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+{% endblock %}

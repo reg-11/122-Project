@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+		<div class="row px-5 pl-5 pt-1 pb-3" style="margin-top: 20px; width: 80%; margin-left: 170px">			
+			<div class="row mx-auto py-2 ">
+							
+				<!--individual posts-->
+				<div class="card py-3 px-4 " style="margin-bottom: 7px">
+					<form method="POST" >
+						{% csrf_token %}
+						<legend class="border-bottom mb-4">Report Post</legend>
+
+						<h4>Please specify the reason for reporting this post</h4>
+
+						<div class="card py-3  px-3 " style="margin-bottom: 7px;background: #323131" >
+							<!--profile picture, username, category-->
+								<div class="row px-3 py-1">
+									<div class="col-auto px-0">
+										<img src="{{ post.author.profile.profile_pic.url }}" class="rounded-circle" style="width:40px">
+									</div>
+									<div class="col-auto me-auto">
+										<h5 class="card-title" style="color: white">{{ post.author }}</h5>
+										<small  style="color:white">{{ post.date|date:"F d, Y" }}</small>
+									</div>
+									<div class="col-auto">
+										<button type="button" class="btn btn-sm btn-secondary">{{ post.category }}</button>
+										
+									</div>
+								</div>
+							<!--content-->
+							<div class="row px-4 py-1">
+								<p class="card-text" style="margin-left: 30px">
+								<a class="card-text" style="text-decoration: none;color:white" href="/esko_app/post/{{post.id}}">{{post.description}} </a></p>
+								<!-- <img  src= "{{ post.image.url }}" style="width: 100%; margin-top: 60px"> -->
+								<p  style="margin-left: 30px;color:white">{{post.tags}}</p>
+							</div>
+						</div>
+						{{form.as_p}}
+						
+						<!--post submit button-->
+						<div class="mb-3">
+							<button class="btn btn-outline-danger" type="submit" >Report</button>
+							<a class="btn btn-outline-secondary" href="{% url 'esko_app:home' pk %}">Cancel</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+			
+
+{% endblock content %}

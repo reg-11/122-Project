@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+		<div class="row px-5 pl-5 pt-1 pb-3" style="margin-top: 20px; width: 80%; margin-left: 170px">			
+			
+							
+			<div class="row mx-auto py-2">
+
+			{% if not search_query %}
+			<legend class=" mb-4">No related posts</legend>
+			
+			{% else %}				
+				<legend class=" mb-4">Related posts</legend>
+				{% for post in page %}
+				
+				<!--individual posts-->
+				
+						<!--individual posts-->
+						<div class="card py-3 " style="margin-bottom: 7px" >
+							<!--profile picture, username, category-->
+								<div class="row px-3 py-1">
+									<div class="col-auto px-0">
+										<img src="{{ post.author.profile.profile_pic.url }}" class="rounded-circle" style="width:40px">
+									</div>
+									<div class="col-auto me-auto">
+										<form action="{% url 'esko_app:profile-other' post.author %}" method="POST">
+											{% csrf_token %}
+											<button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-link" style="color:#515A5A;font-weight: bold;font-size: 20px; text-decoration: none">{{ post.author }}</button> 
+										</form>
+										<small class="text-muted" style="margin-left: 15px">{{ post.date|date:"F d, Y" }}</small>
+									</div>
+									<div class="col-auto">
+										<button type="button" class="btn btn-sm btn-secondary">{{ post.category }}</button>
+										<button type="button" class="btn btn-sm btn-light ms-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots"></i></button>
+										<ul class="dropdown-menu" aria-labelledby="filterdropdownmenu">
+											<li><button class="dropdown-item" type="button">
+												
+												<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="#"><i class="bi bi-flag-fill">Report</i></a></button></li>
+														
+											<!-- if own post -->
+											{% if post.author == user %}
+
+											<li><button class="dropdown-item" type="button" >
+												<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/delete/">
+													<i class="bi bi-trash-fill">Delete</i></a>
+											</button></li>
+
+											<li><button class="dropdown-item" type="button"><a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/update/"><i class="bi bi-pen-fill">Edit</i></a></button></li>
+											{% endif %}
+
+										</ul>
+									</div>
+								</div>
+							<!--content-->
+							<div class="row px-4 py-1">
+								<p class="card-text" style="margin-left: 47px">
+								<a class="card-text" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}">{{post.description}} </a></p>
+
+								{% if  post.post_image   %}
+								
+								
+								<a href="{{ post.post_image.url }}">
+								<img  src= "{{ post.post_image.url }}" style="width: 20%; height: 75%;margin-top: 12px; margin-left: 25px;margin-bottom: 10px">
+								</a>
+								{% endif %}
+
+								<div class="btn-group" role="group">
+									{% for tag in tag_list   %}
+										<form class="d-flex" method=GET action="{% url 'esko_app:search_by_tags' %}">
+
+											<button class="btn btn-link btn-sm" type="submit" name="search_box" value="{{tag}}" style="color: gray;font-size: 15px;margin-left: 25px">#{{tag}}</button>
+													
+										</form>
+									{% endfor   %}
+								</div>
+
+							</div>
+							
+						
+							<!--replies, likes-->
+							<div class="row px-3 py-1">
+								<div class="col-auto me-auto">
+									<a class="btn" style="background:white; font-size:1.1rem; color:#909911" href="{% url 'esko_app:post-detail' post.pk %}"><i class="bi bi-reply-fill"></i>Replies</a>
+								</div>
+								<div class="col-auto">
+								<form action="{% url 'esko_app:like_post' post.pk %}" method="POST">
+								{% csrf_token %}	
+
+								{% if liked %}
+									<button type="submit" name="post_id" value="{{ post.id }}" class="btn" style="background:white; font-size:1.1rem; color:#909911;"><i class="bi bi-heart-fill"></i></button>  
+								{% else %}		
+									<button type="submit" name="post_id" value="{{ post.id }}" class="btn" style="background:white; font-size:1.1rem; color:#909911;"><i class="bi bi-heart"></i></button> 
+								{% endif %}	
+
+								{% if post.total_likes == 1 %}
+										{{ post.total_likes }} Like
+								{% else %}
+									{{ post.total_likes }} Likes
+								{% endif %}
+							</form>
+								</form>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+			</div>
+
+			
+			{% endif %}
+
+
+		</div>
+			
+
+{% endblock content %}

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="row g-0 ">
+
+		<div class="col-md-5 g-0 justify-content-center" >
+			<div class="leftside flex justify-content-center align-items-center padding-top-10 " style="height: 230vh; width: 100%;background:#F5F5F5 ; margin-top: 10; ">				
+			
+				<div class="col center text-center " >
+	
+					<img class="rounded-circle account-img" src="{{ user.profile.profile_pic.url }}" style="width: 40%; margin-top: 60px">
+					<h2 class="font-weight-bold" style="align-content: center;font-size: 40px; color:#515A5A; font-weight: bold;">{{ user.username }}</h2>
+					<h6 class="" style="align-content: center; color: black; margin-top: 5px "><i class="bi bi-pencil" style="margin-right: 5px"></i>{{ user.profile.year_level }}</h6>
+					<h6 class="" style="align-content: center; color: black; "><i class="bi bi-telephone-fill" style="margin-right: 5px"></i>{{ user.profile.phone_number }}</h6>
+					<h6 class="" style="align-content: center; color: black; "><i class="bi bi-link" style="margin-right: 5px"></i>{{ user.profile.sns_account }}</h6>
+					<h6 class="" style="align-content: center; color: black; ">{{ user.profile.bio }}</h6>
+				</div>
+
+			</div>
+					
+		</div>
+
+		<div class="col-md-6 g-0">
+			<div class=" rightside justify-content-center align-items-center"  style="height: 100vh; width: 100%;" >
+
+				<h2 class="font-weight-bold" style="align-content: right;font-size: 25px; color:#DBCA46; font-weight: bold; margin-left: 20px; margin-top: 30px;font-family: sans-serif;">{{ user.username }}  Posts</h2>
+
+				<hr style="width:110%;text-align:left;margin-left:20px">
+
+					<div class="container" style="margin-left: 35px;margin-top: 2px;">
+
+								
+				<div class="row px-1 pl-1 pt-1 pb-3" style="width: 110%">					
+					<div class="row mx-auto py-2">
+
+
+						{% for post in posts %}
+							
+
+						<!--individual posts-->
+						<div class="card py-3 " style="margin-bottom: 7px" >
+							<!--profile picture, username, category-->
+								<div class="row px-3 py-1">
+									<div class="col-auto px-0">
+										<img src="{{ post.author.profile.profile_pic.url }}" class="rounded-circle" style="width:40px">
+									</div>
+									<div class="col-auto me-auto">
+										<form action="{% url 'esko_app:profile-other' post.author %}" method="POST">
+											{% csrf_token %}
+											<button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-link" style="color:#515A5A;font-weight: bold;font-size: 20px; text-decoration: none">{{ post.author }}</button> 
+										</form>
+										<small class="text-muted" style="margin-left: 15px">{{ post.date|date:"F d, Y" }}</small>
+									</div>
+									<div class="col-auto">
+										<form method="get" >
+										<!-- 	<button type="submit" name="category" value="{{ post.category }}" class="btn btn-sm btn-secondary">{{ post.category }}</button> -->
+										<button type="button" class="btn btn-sm btn-secondary">{{ post.category }}</button>
+										<button type="button" class="btn btn-sm btn-light ms-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots"></i></button>
+										<ul class="dropdown-menu" aria-labelledby="filterdropdownmenu">
+											<li><button class="dropdown-item" type="button">
+												
+												<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="#"><i class="bi bi-flag-fill">Report</i></a></button></li>
+														
+											<!-- if own post -->
+											{% if post.author == user %}
+
+											<li><button class="dropdown-item" type="button" >
+												<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/delete/">
+													<i class="bi bi-trash-fill">Delete</i></a>
+											</button></li>
+
+											<li><button class="dropdown-item" type="button"><a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/update/"><i class="bi bi-pen-fill">Edit</i></a></button></li>
+											{% endif %}
+										</ul>
+									</form>
+									</div>
+								</div>
+							<!--content-->
+							<div class="row px-4 py-1">
+								<p class="card-text" style="margin-left: 45px">
+								<a class="card-text" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}">{{post.description}} </a></p>
+
+								{% if  post.post_image  %}
+								<a href="{{ post.post_image.url }}">
+								<img  src= "{{ post.post_image.url }}" style="width: 20%; height: 75%;margin-top: 12px; margin-left: 25px;margin-bottom: 10px">
+								</a>
+								{% endif  %}
+								<!-- tags -->
+								<div class="btn-group" role="group">
+									{% for tag in tag_list   %}
+										<form class="d-flex" method=GET action="{% url 'esko_app:search_by_tags' %}">
+
+											<button class="btn btn-link btn-sm" type="submit" name="search_box" value="{{tag}}" style="color: gray;font-size: 15px;margin-left: 25px">#{{tag}}</button>
+													
+										</form>
+									{% endfor   %}
+								</div>
+							</div>
+							
+						
+
+							<!--replies, likes-->
+							<div class="row px-3 py-1">
+								<div class="col-auto me-auto">
+									<a class="btn" style="background:white; font-size:1.1rem; color:#909911" href="{% url 'esko_app:post-detail' post.pk %}"><i class="bi bi-reply-fill"></i>Replies</a>
+								</div>
+								<div class="col-auto">
+								<form action="{% url 'esko_app:like_post' post.pk %}" method="POST">
+								{% csrf_token %}	
+
+								{% if liked %}
+									<button type="submit" name="post_id" value="{{ post.id }}" class="btn" style="background:white; font-size:1.1rem; color:#909911;"><i class="bi bi-heart-fill"></i></button>  
+								{% else %}		
+									<button type="submit" name="post_id" value="{{ post.id }}" class="btn" style="background:white; font-size:1.1rem; color:#909911;"><i class="bi bi-heart"></i></button> 
+								{% endif %}	
+
+								{% if post.total_likes == 1 %}
+										{{ post.total_likes }} Like
+								{% else %}
+									{{ post.total_likes }} Likes
+								{% endif %}
+							</form>
+								</div>
+							</div>
+						</div>
+						
+						{% endfor %}
+					</div>
+
+
+					{% load extras %}
+								<div class="page-links " style="font-size: 30px">
+									<div class="container">
+										<div class="row ">
+											<div class="col">
+										{% if page.has_previous %}
+											<div style="text-align: left;">
+											<a href="{% my_url page.previous_page_number 'page' request.GET.urlencode %}" style="color:#909911;"><span class="bi bi-arrow-left-circle-fill"></i></span>
+											</div>
+										{% endif %}
+									</div>
+
+									<div class="col">
+										{% if page.has_next %}
+											<div style="text-align: right;">
+											<a href="{% my_url page.next_page_number 'page' request.GET.urlencode %}" style="color:#909911;"><span class="bi bi-arrow-right-circle-fill"></i></span>
+											</div>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
+			</div>
+
+											
+		</div>
+	</div>		
+	</div>
+
+		
+	
+{% endblock %}

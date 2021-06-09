@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="container-fluid px-5 py-5">
+		<div class="row px-4">
+			<h1 class="display-6">Reported Posts</h1>
+		</div>
+		<div class="row px-4"><hr class="mx-auto"></div>
+
+		<!--reported posts-->
+		<div class="row px-5 pl-5 pt-1 pb-3">
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<trhead>
+						<tr>
+							<th scope="col">Date Reported</th>
+							<th scope="col">Post</th>
+							<th scope="col">Problem</th>
+							<th scope="col">Notes</th>
+							<th scope="col">Reported by</th>
+							<th scope="col">Actions</th>
+						</tr>
+					</trhead>
+					<trbody>
+						{% if not reports %}
+						<tr><td colspan="6">No reports</td></tr>
+						{% else %}
+							{% for rpost in reports %}
+							<tr>
+								<td class="me">{{ rpost.date_reported|date:"F d, Y" }}</td>
+								<td>
+									<div class="card py-3 " style="margin-bottom: 7px" >
+									<!--profile picture, username, category-->
+										<div class="row px-4 py-1">
+											<div class="col-auto px-0">
+												<img src="{{ rpost.post.author.profile.profile_pic.url }}" class="rounded-circle" style="width:40px">
+											</div>
+											<div class="col-auto me-auto">
+												<form action="{% url 'esko_app:profile-other' rpost.post.author %}" method="POST">
+													{% csrf_token %}
+													<button type="submit" name="post_id" value="{{ rpost.post.id }}" class="btn btn-link" style="color:#515A5A;font-weight: bold;font-size: 20px; text-decoration: none">{{ rpost.post.author }}</button> 
+												</form>
+												<small class="text-muted" style="margin-left: 15px">{{ rpost.post.date|date:"F d, Y" }}</small>
+											</div>
+											<div class="col-auto">
+												<button type="button" class="btn btn-sm btn-secondary">{{ rpost.post.category }}</button>
+											</div>
+										</div>
+										<!--content-->
+										<div class="row px-3 py-1">
+											<p class="card-text" style="margin-left: 47px">
+											<a class="card-text" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{rpost.post.id}}">{{rpost.post.description}} </a></p>
+
+											{% if  rpost.post.post_image   %}
+											
+											
+											<a href="{{ rpost.post.post_image.url }}">
+												<img  src= "{{ rpost.post.post_image.url }}" style="width: 20%; height: 75%;margin-top: 12px; margin-left: 25px;margin-bottom: 10px">
+											</a>
+											{% endif %}
+
+											<div class="container">
+												<div class="col-md-7 mt-1 mb-1">
+													{% for tag in rpost.post.tags.all   %}
+													<a href="{% url 'esko_app:posts_by_tags' tag.slug %}" style="margin-left: 48px; margin-top: 10px; color:#ACB274; text-decoration: none ">#{{tag.name}}</a>
+													{% endfor %}
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</td>
+								<td>{{ rpost.problem }}</td>
+								<td>{{ rpost.notes }}</td>
+								<td>{{ rpost.reporter }}</td>
+								<td class="mx-auto">
+									<div class="d-grid gap-2">
+										<!-- <button class="dropdown-item" type="button" >
+												<a class="dropdown-item" style="text-decoration: none;color: inherit;" href="/esko_app/post/{{post.id}}/delete/">
+													<i class="bi bi-trash-fill">Delete</i></a>
+											</button> -->
+										<a type="button" href="/esko_app/report/{{rpost.id}}/delete/" class="btn btn-primary text-nowrap">Delete Report</a>
+										
+										<a type="button" class="btn btn-danger text-nowrap" href="/esko_app/rpost/{{rpost.post.id}}/delete/">Delete Post</a>
+									</div>
+								</td>
+							</tr>
+							{% endfor %}
+						{% endif %}
+					</trbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endblock %}

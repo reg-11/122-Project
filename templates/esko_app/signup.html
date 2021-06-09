@@ -1,0 +1,97 @@
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Esko</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+	
+	<style type="text/css">
+		.form-control:focus {
+        border-color: #DBCA46;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
+    }
+	</style>
+
+</head>
+<body>
+
+	<div class="row g-0">
+		{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-success">
+							{{ message }}
+						</div>
+
+					{% endfor %}
+
+				{% endif %}
+
+		<div class="col-md-5 g-0">
+			<div class="leftside d-flex justify-content-center align-items-center" style="height: 100vh; width: 100%;">				
+
+				<div class="col offset-4">	
+
+					<div class="container" style="background-color:#F5F5F5; padding: 25px; width: 90%">
+						<h1 class="font-weight-bold" style="align-content: right;font-size: 60px; color:#DBCA46; font-weight: bold;">Sign Up</h1> 
+
+						
+
+						<form method="POST">
+							{% csrf_token %}
+			
+						  <div class="form-group" id="fg" style="margin-top: 20px;">
+						    <!-- <input type="email" class="form-control" id="email" placeholder="Enter UP-email" style="margin-top: 5px;" >  -->
+						    {{ form.username }}
+						  </div>
+
+
+						  <div class="form-group" id="fg" style="margin-top: 5px;">
+						    <!-- <input type="email" class="form-control" id="email" placeholder="Enter UP-email" style="margin-top: 5px;" >  -->
+						    {{ form.email }}
+						  </div>
+						  <div class="form-group" style="margin-top: 5px;">
+						    <!-- <input type="password" class="form-control" id="password" placeholder="Password" style="margin-top: 5px"> -->
+						    {{ form.password1 }}
+						    
+						  </div>
+						  <div class="form-group" style="margin-top: 5px;">
+						    <!-- <input type="confirm_password" class="form-control" id="confirm_password" placeholder="Confirm password" style="margin-top: 5px"> -->
+						    {{ form.password2 }}
+						  </div>
+						  
+						  <button type="submit" class="btn btn-warning btn-lg" style="font-size: 15px; color: white ;  width:100%; margin-top: 30px; margin-left: 5px">Sign Up</button>
+						
+						 <!--  <a class="btn btn-danger btn-lg" href="{% provider_login_url 'google' %}" style="font-size: 15px; color: white ;  width:100%; margin-top: 7px; margin-left: 5px"> Sign Up with Google</a> -->
+						  
+						</form>
+						<hr style="width:100%;text-align:left;margin-left:0">
+
+						{% if form.errors %}
+						    {% for field in form %}
+						        {% for error in field.errors %}
+						            <p> {{ error }} </p>
+						        {% endfor %}
+						    {% endfor %}
+						{% endif %}
+
+						<h6 style="margin-top: 7px">Already have an account? <a href="/esko_app/login/"  style="margin-left: 50px; color:#DBCA46;" >Login</a></h6>
+					</div>
+				</div>				
+			</div>
+			
+		</div>
+
+		<div class="col-md-6 g-0">
+			<div class="rightside d-flex justify-content-center align-items-center"  style="height: 100vh; width: 100%;" >
+				<img src="/static/landing_image.jpg" style="width: 100%;height: 80%" >				
+			</div>
+		</div>		
+	</div>
+
+
+
+</body>
+</html>

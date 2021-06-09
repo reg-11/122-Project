@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!--welcome container-->
+<div class="container-fluid text-center mb-2 px-5 pt-5 pb-3 "  style="text-align: center">
+		<h1 class="display-3">
+			What are you looking for?
+		</h1>
+		<p> </p>
+		<form class="d-flex" method=GET action="{% url 'esko_app:search_by_tags' %}">
+			{% csrf_token %}
+<!-- 
+			<input class="form-control me-2" type="search" placeholder="Search for tags" aria-label="Search" name="searched" style="width:50%;margin-left: 270px" > -->
+
+			<input class="form-control me-2" id="search_box" type="text" name="search_box"  placeholder="Search for tags" style="width:50%;margin-left: 280px">
+
+			<button class="btn btn-lg bgyellow text-nowrap" type="submit">
+				Search</a>
+		</form>
+		
+	</div>
+
+	<!--categories container-->
+	<form method="GET" action="{% url 'esko_app:post_by_category' %}">
+		<div class="container-fluid px-4 py-3">
+			<div class="row px-md-4">
+				<div class="col rounded-3 mx-3 px-3 py-3"></div>
+				<div class="col rounded-3 mx-3 px-3 py-3" style="color:white; background-color:#A10618;">
+					<center>
+					<button class="btn btn-link" type="submit" name="category" value="sell" style="text-decoration: none; color: white;">
+						<i class="bi bi-cart-check-fill" style="color:#909911;"></i>
+						<br/>For Sale
+					</button></center>
+				</div>
+				<div class="col rounded-3 mx-3 px-3 py-3" style="color:white; background-color:#389DA1;">
+					<center>
+					<button class="btn btn-link" type="submit" name="category" value="services/rent" style="text-decoration: none">
+						<i class="bi bi-hand-index-fill" style="color:#909911;"></i>
+						<br/>Services/Rent
+					</button></center>
+				</div>
+				<div class="col rounded-3 mx-3 px-3 py-3"></div>
+			</div>
+			<p> </p>
+			<div class="row px-md-4">
+				<div class="col rounded-3 mx-3 px-3 py-3"></div>
+				<div class="col rounded-3 mx-3 px-3 py-3" style="color:white; background-color:#435570;">
+					<center>
+					<button class="btn btn-link" type="submit" name="category" value="swap" style="text-decoration: none">
+						<i class="bi bi-collection-fill" style="color:#909911;"></i>
+						<br/>Swap
+					</button></center>
+				</div>
+				<div class="col rounded-3 mx-3 px-3 py-3" style="color:white; background-color:#EFBA34;">
+					<center>
+					<button class="btn btn-link" type="submit" name="category" value="find" style="text-decoration: none">
+						<i class="bi bi-search" style="color:#909911;"></i>
+						<br/>Find
+					</button></center>
+				</div>
+				<div class="col rounded-3 mx-3 px-3 py-3"></div>
+			</div>
+		</div>
+	</form>
+
+{% endblock %}
